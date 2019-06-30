@@ -1,8 +1,9 @@
-import 'package:client/tools/board.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+
+import 'package:hospitalclient/Model/board.dart';
 
 void main() => runApp(MaterialApp(home: NoticeBoard(),));
 
@@ -20,7 +21,7 @@ class _NoticeBoardState extends State<NoticeBoard> {
   @override
   void initState() {
     super.initState();
-    collectionReference = Firestore.instance.collection("Notice_Board");
+    collectionReference = Firestore.instance.collection("Cardiology");
     subscription = collectionReference.snapshots().listen((data){
       setState(() {
        noticeList = data.documents; 
@@ -38,7 +39,7 @@ class _NoticeBoardState extends State<NoticeBoard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Notice Board"),
+        title: Text("Cardiology"),
         backgroundColor: Colors.red,
       ),
       body: Container(
@@ -46,9 +47,9 @@ class _NoticeBoardState extends State<NoticeBoard> {
           child: ListView.builder(
             itemCount: noticeList.length,
             itemBuilder: (_,i){
-              return Board((noticeList[i])["notice"],
-              (noticeList[i])["notice_id"],
-              (noticeList[i])["date"]);
+              return Board((noticeList[i])["name"],
+              (noticeList[i])["expo"],
+              (noticeList[i])["days"]);
             },
           ),
         ):Container(
