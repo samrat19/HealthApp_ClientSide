@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               controller: tabController,
               children: <Widget>[
                 NoticeBoard("Cardiology"),
-                NoticeBoard("Cardiology"),
+                NoticeBoard("Orthopedic"),
                 NoticeBoard("Opthalmology"),
                 NoticeBoard("Nurology"),
                 NoticeBoard("Darmotology")
