@@ -50,12 +50,12 @@ class _NoticeBoardState extends State<NoticeBoard> {
                       itemBuilder: (_, i) {
                         return GestureDetector(
                           onTap: (){
-                            Navigator.of(context).push(
-                              MaterialPageRoute (builder:(_)=> 
-                                PatientDetail((noticeList[i])["name"], (noticeList[i])["days"])
-                              )
-                            );
-                          }, //book e etao lekha achhe tv dekhte nei
+                            Navigator.of(context)
+                             .push(MaterialPageRoute (builder: (_)=>PatientDetail(
+                               (noticeList[i])["name"], 
+                               (noticeList[i])["days"]
+                              )));
+                          },
                           child: Board((noticeList[i])["name"],
                               (noticeList[i])["expo"], (noticeList[i])["days"]),
                         );
@@ -71,19 +71,3 @@ class _NoticeBoardState extends State<NoticeBoard> {
                   )));
   }
 }
-
-
-//ekhan theke doc name r days jabe patient page
-// patient ke day choose korte debe hint e
-// then check korbe hint er date gulo r input date same kina
-// same hole data successfully send korbe
-// na hole snackbar e show korabe doctor not availabel on that day
-// snack bar ta noy pore koro. age etuku koro
-//database er field gulo hbe
-// na patient name
-// syntom
-// doctor name
-// day
-// r kichhu lagbe na may be. etuku koro
-// paarbe ? copy paste korar jayga achhe?
-// copy paste i korte hbe

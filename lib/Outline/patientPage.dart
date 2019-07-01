@@ -1,203 +1,143 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
 
-final FirebaseOptions firebaseOptions = FirebaseOptions(
-  googleAppID: '1:880059936692:android:9fe8119f51d79cd1',
-  apiKey: 'AIzaSyBn_-dHAZgz14RcsWK6dpSYkZC6g9NJcbU', 
-  databaseURL: 'https://esd-hospital-mangement.firebaseio.com',
-);
-//ager repo r json ta khule dekho na kothay achhe. ami lebu khachhi ok
 class PatientDetail extends StatefulWidget {
   final String d_name;
   final String doc_date;
 
-  PatientDetail(this.d_name,this.doc_date);
+  PatientDetail(this.d_name, this.doc_date);
 
   @override
-  _PatientDetailState createState() => _PatientDetailState(this.d_name,this.doc_date);
+  _PatientDetailState createState() =>
+      _PatientDetailState(this.d_name, this.doc_date);
 }
 
 class _PatientDetailState extends State<PatientDetail> {
-
-  List<Item> items = List();
-  Item item;
-  DatabaseReference databaseReference;
-
-  final GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    item = Item(""," ",  " ",doc_date,d_name);
-
-    databaseReference = FirebaseDatabase.instance.reference().child("Patient_Details");
-  }
-
-  void handleSummit(){
-
-    final FormState formState = formkey.currentState;
-
-    if(formState.validate()){
-      formState.save();
-      formState.reset();
-      databaseReference.push().set(item.toJson());
-    }
-  }
-
   final String d_name;
   final String doc_date;
 
-  _PatientDetailState(this.d_name,this.doc_date);
+  _PatientDetailState(this.d_name, this.doc_date);
 
+  TextEditingController patientName = TextEditingController();
+  TextEditingController patientSyntom = TextEditingController();
+  TextEditingController appointmentDay = TextEditingController();
+
+  CollectionReference collectionReference;
+  DocumentReference databaseRefference;
+  List<DocumentSnapshot> patientDetails;
+  StreamSubscription<QuerySnapshot> streamSubscription;
+
+  String pName;
+  String pSyn;
+  String dName;
+  String pDay;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   collectionReference = Firestore.instance.collection("Appointments");
+  //   streamSubscription = collectionReference.snapshots().listen((data) {
+  //     setState(() {
+  //       patientDetails = data.documents;
+  //     });
+  //   });
+  // }
+
+  @override
+  void dispose() {
+    super.dispose();
+    streamSubscription.cancel();
+  }
+
+  void uploadnotice() {
+    pName = patientName.text;
+    pSyn = patientSyntom.text;
+    dName = this.d_name;
+    pDay = appointmentDay.text;
+
+    Map<String, String> patientData = <String, String>{
+      "patient_name": pName,
+      "patient_syntom": pSyn,
+      "doctor_name": dName,
+      "appointment_day": pDay,
+    };
+    DocumentReference user =
+        Firestore.instance.document("AppointmentData/$pName+$pDay");
+    user.setData(patientData).whenComplete(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+        title: Text("Patient Regestration"),
         backgroundColor: Colors.red,
-        title: Text("Patient Details"),
       ),
-      backgroundColor: Colors.red[50],
-      body: ListView(
-          children: <Widget>[
-            _docTile(d_name),
-            Container(
-              margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 20.0),
-              padding: EdgeInsets.all(10.0),
-              child: Form(
-                key: formkey,
-                autovalidate: true,
-                child: Column(
-                  children: <Widget>[
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Name",
-                        hintText: "Enter Name e.g. Alex Smith",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: BorderSide(
-                                color: Colors.redAccent,
-                                width: 2.0
-                            )
-                        ),
+      body: Container(
+        color: Colors.red,
+        padding: EdgeInsets.all(10.0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20.0),
+          clipBehavior: Clip.hardEdge,
+                  child: Container(
+            padding: EdgeInsets.all(20.0),
+            color: Colors.white,
+            child: Form(
+              child: ListView(
+                children: <Widget>[
+                  Divider(height: 100.0,),
+                  Column(
+                    children: <Widget>[
+                      TextFormField(
+                        controller: patientName,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                            labelText: "Patient Name",
+                            hintText: "Enter the patient Name",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                borderSide: BorderSide(
+                                    style: BorderStyle.solid, width: 4.0))),
                       ),
-                      onSaved: (val) => item.title = val,
-                      validator: (val) => val == "" ? val : null,
-                      obscureText: false,
-                      keyboardType: TextInputType.text,
-                    ),
-                    SizedBox(height: 20.0,),
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Symptom",
-                          hintText: "Enter Symptom e.g. Back Pain",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(
-                                  color: Colors.redAccent,
-                                  width: 2.0
-                              )
-                          )
+                      Divider(),
+                      TextFormField(
+                        controller: patientSyntom,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                            labelText: "Patient Syntom",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                borderSide: BorderSide(
+                                    style: BorderStyle.solid, width: 4.0))),
                       ),
-                      onSaved: (val) => item.body = val,
-                      validator: (val) => val == "" ? val : null,
-                      obscureText: false,
-                      keyboardType: TextInputType.text,
-                    ),
-                    SizedBox(height: 20.0,),
-                    TextFormField(
-                      decoration: InputDecoration(
-                          labelText: "Choose Day",
-                          hintText: "choose from ${this.doc_date}",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              borderSide: BorderSide(
-                                  color: Colors.redAccent,
-                                  width: 2.0
-                              )
-                          )
+                      Divider(),
+                      TextFormField(
+                        controller: appointmentDay,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                            labelText: "Choose Day",
+                            hintText: "choose from ${this.doc_date}",
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                borderSide: BorderSide(
+                                    style: BorderStyle.solid, width: 4.0))),
                       ),
-                      onSaved: (val) => item.body = val,
-                      validator: (val) => val == "" ? val : null,
-                      obscureText: false,
-                      keyboardType: TextInputType.text,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(40.0),
-                      child: RaisedButton(
-                        padding: EdgeInsets.all(10.0),
-                        color: Colors.redAccent,
-                        splashColor: Colors.pinkAccent,
-                        elevation: 10.0,
-                        shape: BeveledRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        child: Text(
-                          "Submit",
-                          style: TextStyle(color: Colors.white, fontSize: 24.0),
-                        ),
-                        onPressed: handleSummit,
-                      ),
-                    )
-                  ],
-                ),
+                      Divider(),
+                      Divider(height: 100.0,),
+                      RaisedButton(
+                        child: Text("Upload"),
+                        onPressed: uploadnotice
+                      )
+                    ],
+                  ),
+                ],
               ),
-            )
-          ]
+            ),
+          ),
+        )
       ),
     );
-  }
-
-  Widget _docTile(String name) => Container(
-    margin: EdgeInsets.all(20.0),
-    padding: EdgeInsets.all(10.0),
-    decoration: BoxDecoration(
-      color: Colors.red,
-      gradient: LinearGradient(
-        colors: [Colors.red, Colors.pink],
-      ),
-      borderRadius: BorderRadius.circular(10.0),
-    ),
-    child: ListTile(
-      leading: Icon(Icons.person_outline, color: Colors.white,),
-      title: Text(
-        "Dr. $name",
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 20.0,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-    ),
-  );
-}
-
-class Item{
-
-  String key;
-  String title;
-  String body;
-  String day;
-  String doctor;
-
-  Item(this.key, this.title, this.body,this.day, this.doctor);
-
-  Item.fromSnapshot(DataSnapshot datasnapshot) :
-        key = datasnapshot.key,
-        title = datasnapshot.value["title"],
-        body = datasnapshot.value["body"],
-        day = datasnapshot.value["day"],
-        doctor = datasnapshot.value["doctor"];
-
-  toJson(){
-    return{
-      "Patient's name" : title,
-      "Patient's symptom(s)" : body,
-      "Visiting day" : day,
-      "Doctor's name" : doctor ,
-    };
   }
 }
