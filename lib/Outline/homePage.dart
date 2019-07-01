@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return showDialog(
         context: context,
       builder: (Context)=>AlertDialog(
-        title:Text("Do you want to close the App?",style: TextStyle(color:Colors.red,fontSize: 20.0),),
+        title:Text("Do you want to close the app?",style: TextStyle(color:Colors.red,fontSize: 20.0),),
         actions: <Widget>[
           FlatButton(
             onPressed: ()=> Navigator.pop(context,true),
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 NoticeBoard("Orthopedic"),
                 NoticeBoard("Opthalmology"),
                 NoticeBoard("Nurology"),
-                NoticeBoard("Darmotology")
+                NoticeBoard("Darmatology")
               ],
             ),
           ),
@@ -71,18 +71,18 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
                 Tab(
                   icon: Icon(Icons.accessible_forward, color: Colors.red,),
-                  child: Text("Othopedic",style:TextStyle(color: Colors.grey[900])),
+                  child: Text("Orthopaedics",style:TextStyle(color: Colors.grey[900])),
                 ),
                 Tab(
                   icon: Icon(Icons.remove_red_eye, color: Colors.red,),
-                  child: Text("Opthalmology",style:TextStyle(color: Colors.grey[900])),
+                  child: Text("Ophthalmology",style:TextStyle(color: Colors.grey[900])),
                 ),
                 Tab(
                   icon: Icon(Icons.face, color: Colors.red,),
-                  child: Text("Nurology",style:TextStyle(color: Colors.grey[900])),
+                  child: Text("Neurology",style:TextStyle(color: Colors.grey[900])),
                 ),
                 Tab(
-                  child: Text("Darmatology",style:TextStyle(color: Colors.grey[900])),
+                  child: Text("Dermatology",style:TextStyle(color: Colors.grey[900])),
                   icon: Icon(Icons.content_cut, color: Colors.red,),
                 )
               ],

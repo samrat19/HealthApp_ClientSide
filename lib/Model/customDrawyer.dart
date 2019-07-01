@@ -11,12 +11,13 @@ class CustomDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.redAccent,
+      color: Colors.blueGrey[800],
       child: ListView(
         children: <Widget>[
           Container(
-            color: Colors.grey[800],
+            color: Colors.grey[800].withOpacity(0.8),
             height: 200.0,
+            child: Image.asset("asset/logo.png"),
           ),
           ListTile(
             title: Text(
@@ -68,7 +69,7 @@ class CustomDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             title: Text(
-              "Parters",
+              "Partners",
               style: TextStyle(
                   fontSize: _fontSize,
                   color: Colors.white

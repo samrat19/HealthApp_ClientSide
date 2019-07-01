@@ -35,7 +35,7 @@ class _HospitalityState extends State<Hospitality> {
             ),
           ),
           SizedBox(height: 10.0,),
-
+          Divider(height: 40.0,),
           // Heading 1
           _heading("Guest Relations"),
           _bulletPoint("Addopted the engagement pathway for Voice of Customemer (VOC)"),
@@ -50,7 +50,7 @@ class _HospitalityState extends State<Hospitality> {
           Divider(),
           
           // Heading 3
-          _heading("Addimission"),
+          _heading("Admission"),
           _bulletPoint("Minimises waiting time for planned admissions"),
           _bulletPoint("Dedicated rooming experience that orients patients and attendees to various hospital services"),
           Divider(),

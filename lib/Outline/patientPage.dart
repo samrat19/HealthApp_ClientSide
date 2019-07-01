@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/painting.dart';
 
 class PatientDetail extends StatefulWidget {
   final String d_name;
@@ -21,8 +22,8 @@ class _PatientDetailState extends State<PatientDetail> {
   _PatientDetailState(this.d_name, this.doc_date);
 
   TextEditingController patientName = TextEditingController();
+  TextEditingController patientNum = TextEditingController();
   TextEditingController patientSyntom = TextEditingController();
-  TextEditingController appointmentDay = TextEditingController();
 
   CollectionReference collectionReference;
   DocumentReference databaseRefference;
@@ -33,17 +34,10 @@ class _PatientDetailState extends State<PatientDetail> {
   String pSyn;
   String dName;
   String pDay;
+  String numb;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   collectionReference = Firestore.instance.collection("Appointments");
-  //   streamSubscription = collectionReference.snapshots().listen((data) {
-  //     setState(() {
-  //       patientDetails = data.documents;
-  //     });
-  //   });
-  // }
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final snackBar = SnackBar(content: Text('Appointment Done'));
 
   @override
   void dispose() {
@@ -55,89 +49,104 @@ class _PatientDetailState extends State<PatientDetail> {
     pName = patientName.text;
     pSyn = patientSyntom.text;
     dName = this.d_name;
-    pDay = appointmentDay.text;
 
     Map<String, String> patientData = <String, String>{
       "patient_name": pName,
       "patient_syntom": pSyn,
       "doctor_name": dName,
-      "appointment_day": pDay,
+      "appointment_day": this.doc_date,
     };
     DocumentReference user =
-        Firestore.instance.document("AppointmentData/$pName+$pDay");
+        Firestore.instance.document("AppointmentData/$pName+$dName");
     user.setData(patientData).whenComplete(() {});
+
+    SnackBar snackBar = SnackBar(
+        content: Text(
+            "Your appointment is ready with ${this.d_name} on ${this.doc_date}"));
+    _scaffoldKey.currentState.showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
-        title: Text("Patient Regestration"),
-        backgroundColor: Colors.red,
+        title: Text(
+          "Appointment",
+          style: TextStyle(fontSize: 18.0),
+        ),
+        backgroundColor: Colors.red[800],
       ),
       body: Container(
-        color: Colors.red,
-        padding: EdgeInsets.all(10.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20.0),
-          clipBehavior: Clip.hardEdge,
-                  child: Container(
-            padding: EdgeInsets.all(20.0),
-            color: Colors.white,
-            child: Form(
-              child: ListView(
-                children: <Widget>[
-                  Divider(height: 100.0,),
-                  Column(
-                    children: <Widget>[
-                      TextFormField(
-                        controller: patientName,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                            labelText: "Patient Name",
-                            hintText: "Enter the patient Name",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                                borderSide: BorderSide(
-                                    style: BorderStyle.solid, width: 4.0))),
-                      ),
-                      Divider(),
-                      TextFormField(
-                        controller: patientSyntom,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                            labelText: "Patient Syntom",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                                borderSide: BorderSide(
-                                    style: BorderStyle.solid, width: 4.0))),
-                      ),
-                      Divider(),
-                      TextFormField(
-                        controller: appointmentDay,
-                        keyboardType: TextInputType.text,
-                        decoration: InputDecoration(
-                            labelText: "Choose Day",
-                            hintText: "choose from ${this.doc_date}",
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                                borderSide: BorderSide(
-                                    style: BorderStyle.solid, width: 4.0))),
-                      ),
-                      Divider(),
-                      Divider(height: 100.0,),
-                      RaisedButton(
-                        child: Text("Upload"),
-                        onPressed: uploadnotice
-                      )
-                    ],
-                  ),
-                ],
+          color: Colors.red[800],
+          padding: EdgeInsets.all(10.0),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20.0),
+            clipBehavior: Clip.hardEdge,
+            child: Container(
+              padding: EdgeInsets.all(20.0),
+              color: Colors.white,
+              child: Form(
+                child: ListView(
+                  children: <Widget>[
+                    Text(
+                      "Appointment with Dr. ${this.d_name} on ${this.doc_date}",
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.red[800]),
+                      textAlign: TextAlign.center,
+                    ),
+                    Divider(
+                      height: 80.0,
+                    ),
+                    Column(
+                      children: <Widget>[
+                        TextFormField(
+                          controller: patientName,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                              labelText: "Patient's Name",
+                              hintText: "Enter the patient's name",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      style: BorderStyle.solid, width: 4.0))),
+                        ),
+                        Divider(),
+                        TextFormField(
+                          controller: patientSyntom,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                              labelText: "Patient's Symptom(s)",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      style: BorderStyle.solid, width: 4.0))),
+                        ),
+                        Divider(),
+                        Divider(
+                          height: 100.0,
+                        ),
+                        RaisedButton(
+                            elevation: 80.0,
+                            splashColor: Colors.white,
+                            color: Colors.red[800],
+                            child: Text(
+                              "Upload",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            onPressed: uploadnotice)
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        )
-      ),
+          )),
     );
   }
 }
