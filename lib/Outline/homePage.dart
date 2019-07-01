@@ -53,9 +53,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               children: <Widget>[
                 NoticeBoard("Cardiology"),
                 NoticeBoard("Cardiology"),
-                NoticeBoard("Orthopedic"),
-                NoticeBoard("Cardiology"),
-                NoticeBoard("Orthopedic")
+                NoticeBoard("Opthalmology"),
+                NoticeBoard("Nurology"),
+                NoticeBoard("Darmotology")
               ],
             ),
           ),
