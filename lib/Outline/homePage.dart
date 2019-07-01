@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hospitalclient/Model/customDrawyer.dart';
 import 'package:hospitalclient/Model/doctorModel.dart';
 
 class HomePage extends StatefulWidget {
@@ -8,7 +9,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   TabController tabController;
-  int _currentPage = 0;
 
   Future<bool> _Onbackpressed(){
     return showDialog(
@@ -45,7 +45,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             title: Text("Healthcare"),
           ),
           drawer: Drawer(
-            //child: CustomDrawer(),
+            child: CustomDrawer(),
           ),
           body: Container(
             child: TabBarView(
