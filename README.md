@@ -1,4 +1,4 @@
-# hospitalclient
+# client
 
 A new Flutter project.
 
