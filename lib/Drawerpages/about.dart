@@ -25,8 +25,9 @@ class _AboutState extends State<About> {
       backgroundColor: Colors.red[50],
       body: ListView(
         children: <Widget>[
+          CustomAbout("Atri Das", "161001001265", 'images/atri.jpg'),
           CustomAbout("Shoili Chowdhury", "181001001181", ''),
-          CustomAbout("Debkanta Bhattacharya", "181001101035", ''),
+          CustomAbout("Ritam Chakraborty", "161001001070", 'images/ritam.jpeg'),
         ],
       ),
     );
