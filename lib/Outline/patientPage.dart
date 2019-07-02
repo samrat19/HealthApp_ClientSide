@@ -24,6 +24,7 @@ class _PatientDetailState extends State<PatientDetail> {
   TextEditingController patientName = TextEditingController();
   TextEditingController patientNum = TextEditingController();
   TextEditingController patientSyntom = TextEditingController();
+  TextEditingController patientPhone = TextEditingController();
 
   CollectionReference collectionReference;
   DocumentReference databaseRefference;
@@ -35,6 +36,7 @@ class _PatientDetailState extends State<PatientDetail> {
   String dName;
   String pDay;
   String numb;
+  String pPhone;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final snackBar = SnackBar(content: Text('Appointment Done'));
@@ -49,15 +51,16 @@ class _PatientDetailState extends State<PatientDetail> {
     pName = patientName.text;
     pSyn = patientSyntom.text;
     dName = this.d_name;
-
+    pPhone = patientPhone.text;
     Map<String, String> patientData = <String, String>{
       "patient_name": pName,
       "patient_syntom": pSyn,
       "doctor_name": dName,
       "appointment_day": this.doc_date,
-    };
+      "phone_number" : pPhone,
+    }; 
     DocumentReference user =
-        Firestore.instance.document("AppointmentData/$pName+$dName");
+        Firestore.instance.document("AppointmentData/$pName $pPhone");
     user.setData(patientData).whenComplete(() {});
 
     SnackBar snackBar = SnackBar(
@@ -108,6 +111,18 @@ class _PatientDetailState extends State<PatientDetail> {
                           decoration: InputDecoration(
                               labelText: "Patient's Name",
                               hintText: "Enter the patient's name",
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  borderSide: BorderSide(
+                                      style: BorderStyle.solid, width: 4.0))),
+                        ),
+                        Divider(),
+                        TextFormField(
+                          controller: patientPhone,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                              labelText: "Patient's Phone Number",
+                              hintText: "Enter the contact number",
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20.0),
                                   borderSide: BorderSide(
