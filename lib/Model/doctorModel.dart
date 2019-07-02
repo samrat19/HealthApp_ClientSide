@@ -57,7 +57,7 @@ class _NoticeBoardState extends State<NoticeBoard> {
                               )));
                           },
                           child: Board((noticeList[i])["name"],
-                              (noticeList[i])["expo"], (noticeList[i])["days"]),
+                              (noticeList[i])["expo"], (noticeList[i])["days"], (noticeList[i])["degree"]),
                         );
                       },
                     ),
